@@ -1,5 +1,6 @@
 package com.example.paqueteria.domain.entity;
 
+import com.example.paqueteria.domain.valueobjects.PaquetePeso;
 import com.example.paqueteria.domain.valueobjects.TarifaPrecioPorKilogramo;
 
 import java.math.BigDecimal;
@@ -85,19 +86,19 @@ public class Tarifa {
         return precioPorKilogramo;
     }
 
-    public BigDecimal calcularPrecio(BigDecimal pesoKilogramos) {
+    public BigDecimal calcularPrecio(PaquetePeso pesoKilogramos) {
         if (pesoKilogramos == null) {
             throw new IllegalArgumentException(
                     "El peso es obligatorio"
             );
         }
 
-        if (pesoKilogramos.compareTo(BigDecimal.ZERO) <= 0) {
+        if (pesoKilogramos.getKilogramos().compareTo(BigDecimal.ZERO) <= 0) {
             throw new IllegalArgumentException(
                     "El peso debe ser mayor que cero"
             );
         }
-        return precioPorKilogramo.getPrecioPorKilogramo().multiply(pesoKilogramos).setScale(2, RoundingMode.HALF_UP);
+        return precioPorKilogramo.getPrecioPorKilogramo().multiply(pesoKilogramos.getKilogramos()).setScale(2, RoundingMode.HALF_UP);
     }
 
     @Override
