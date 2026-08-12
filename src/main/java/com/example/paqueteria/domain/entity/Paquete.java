@@ -264,7 +264,7 @@ public class Paquete {
         this.estadoPaquete = nuevoEstado;
 
         return new HistorialEstado(
-                id,
+                id, // Paquete.id → se guarda como paqueteId
                 nuevoEstado,
                 LocalDateTime.now(),
                 oficinaId
