@@ -1,0 +1,4 @@
+package com.example.paqueteria.application.service.oficina;
+
+public class DeleteOficinaService {
+}
