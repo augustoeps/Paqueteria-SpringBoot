@@ -9,6 +9,7 @@ import java.util.UUID;
 public interface TarifaRepositoryPort {
 
     Tarifa save(Tarifa tarifa);
+    Tarifa update(Tarifa tarifa);
     Optional<Tarifa> findById(UUID id);
     List<Tarifa> findAll();
     Optional<Tarifa> findByOrigenAndDestino(UUID provinciaOrigenId, UUID provinciaDestinoId);

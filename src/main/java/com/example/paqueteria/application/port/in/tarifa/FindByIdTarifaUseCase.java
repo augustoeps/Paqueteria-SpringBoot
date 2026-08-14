@@ -5,6 +5,6 @@ import com.example.paqueteria.domain.entity.Tarifa;
 import java.util.Optional;
 import java.util.UUID;
 
-public interface FindByIdTarifaByIdUseCase {
+public interface FindByIdTarifaUseCase {
     Optional<Tarifa> findById(UUID id);
 }

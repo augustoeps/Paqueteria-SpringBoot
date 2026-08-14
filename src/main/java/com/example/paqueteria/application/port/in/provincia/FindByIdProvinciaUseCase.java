@@ -5,7 +5,7 @@ import com.example.paqueteria.domain.entity.Provincia;
 import java.util.Optional;
 import java.util.UUID;
 
-public interface FindProvinciaUseCase {
+public interface FindByIdProvinciaUseCase {
     Optional<Provincia> findById(UUID id);
 
 }

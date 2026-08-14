@@ -4,6 +4,6 @@ import java.util.UUID;
 
 public interface DeleteProvinciaUseCase {
 
-    Boolean delete(UUID id);
+    boolean delete(UUID id);
 
 }
