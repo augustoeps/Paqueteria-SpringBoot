@@ -8,5 +8,5 @@ import java.util.UUID;
 public interface FindPaqueteByIdUseCase {
 
 
-    Optional<Paquete> FindByIdUse(UUID id);
+    Optional<Paquete> FindById(UUID id);
 }

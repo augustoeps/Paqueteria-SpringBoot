@@ -3,7 +3,6 @@ package com.example.paqueteria.application.service.provincia;
 import com.example.paqueteria.application.port.in.provincia.FindAllProvinciaUseCase;
 import com.example.paqueteria.application.port.in.provincia.FindByIdProvinciaUseCase;
 import com.example.paqueteria.application.port.out.provincia.ProvinciaRepositoryPort;
-import com.example.paqueteria.domain.entity.Oficina;
 import com.example.paqueteria.domain.entity.Provincia;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +18,8 @@ public class FindProvinciaService  implements FindAllProvinciaUseCase, FindByIdP
     public FindProvinciaService(ProvinciaRepositoryPort provinciaRepositoryPort) {
         this.provinciaRepositoryPort = provinciaRepositoryPort;
     }
+
+
 
     @Override
     public List<Provincia> getAll() {
