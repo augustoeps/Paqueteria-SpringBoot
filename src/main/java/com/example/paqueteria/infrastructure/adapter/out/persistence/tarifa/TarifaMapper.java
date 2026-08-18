@@ -1,4 +1,4 @@
-package com.example.paqueteria.infrastructure.adapter.out.persistence.Tarifa;
+package com.example.paqueteria.infrastructure.adapter.out.persistence.tarifa;
 
 import com.example.paqueteria.domain.entity.Tarifa;
 import com.example.paqueteria.domain.valueobjects.TarifaPrecioPorKilogramo;

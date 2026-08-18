@@ -1,4 +1,4 @@
-package com.example.paqueteria.infrastructure.adapter.out.persistence.HistorialEstado;
+package com.example.paqueteria.infrastructure.adapter.out.persistence.historialEstado;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

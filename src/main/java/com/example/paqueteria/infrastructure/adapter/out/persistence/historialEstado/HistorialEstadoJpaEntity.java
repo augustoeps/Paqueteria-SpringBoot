@@ -1,4 +1,4 @@
-package com.example.paqueteria.infrastructure.adapter.out.persistence.HistorialEstado;
+package com.example.paqueteria.infrastructure.adapter.out.persistence.historialEstado;
 
 import com.example.paqueteria.domain.enums.EstadoPaquete;
 import jakarta.persistence.Entity;
@@ -9,7 +9,6 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.EnumType;
 
 import java.time.LocalDateTime;
-import java.util.Objects;
 import java.util.UUID;
 
 @Entity

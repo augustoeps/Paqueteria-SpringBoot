@@ -1,4 +1,4 @@
-package com.example.paqueteria.infrastructure.adapter.out.persistence.Tarifa;
+package com.example.paqueteria.infrastructure.adapter.out.persistence.tarifa;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -15,13 +15,13 @@ public class TarifaJpaEntity {
     @Id
     private UUID id;
 
-    @Column(name = "provinciaOrigenId", nullable = false)
+    @Column(name = "provincia_origen_id", nullable = false)
     private UUID provinciaOrigenId;
 
-    @Column(name = "provinciaDestinoId", nullable = false)
+    @Column(name = "provincia_destino_id", nullable = false)
     private UUID provinciaDestinoId;
 
-    @Column(name = "precioPorKilogramo", nullable = false)
+    @Column(name = "precio_por_kilogramo", nullable = false)
     private BigDecimal precioPorKilogramo;
 
     // JPA EXIGE un constructor vacío (sin argumentos)
@@ -36,7 +36,6 @@ public class TarifaJpaEntity {
         this.precioPorKilogramo = precioPorKilogramo;
     }
 
-    // Getters y Setters corregidos
     public UUID getId() {
         return id;
     }
@@ -69,4 +68,3 @@ public class TarifaJpaEntity {
         this.precioPorKilogramo = precioPorKilogramo;
     }
 }
-

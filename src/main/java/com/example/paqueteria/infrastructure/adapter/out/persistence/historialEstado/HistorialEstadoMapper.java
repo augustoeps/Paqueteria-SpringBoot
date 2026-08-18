@@ -1,4 +1,4 @@
-package com.example.paqueteria.infrastructure.adapter.out.persistence.HistorialEstado;
+package com.example.paqueteria.infrastructure.adapter.out.persistence.historialEstado;
 
 import com.example.paqueteria.domain.entity.HistorialEstado;
 import org.springframework.stereotype.Component;

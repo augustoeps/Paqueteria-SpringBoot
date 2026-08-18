@@ -14,22 +14,26 @@ public class OficinaMapper {
                 oficina.getId(),
                 oficina.getCodigo().getCodigo(),
                 oficina.getNombre().getNombre(),
-                oficina.getDireccion().toString(), // Esto guarda: "calle, numero, ciudad, cp"
+                oficina.getDireccion().getCalle(),
+                oficina.getDireccion().getNumero(),
+                oficina.getDireccion().getCiudad(),
+                oficina.getDireccion().getCodigoPostal(),
                 oficina.getProvinciaId()
         );
     }
 
-    public Oficina toDomain(OficinaJpaEntity oficina) {
-        // Dividimos el string guardado por la coma
-        String[] partes = oficina.getDireccion().split(", ");
-
+    public Oficina toDomain(OficinaJpaEntity entity) {
         return new Oficina(
-                oficina.getId(),
-                new OficinaCodigo(oficina.getCodigo()),
-                new OficinaNombre(oficina.getNombre()),
-                // Asumiendo el orden exacto del toString(): calle, numero, ciudad, cp
-                new OficinaDireccion(partes[3], partes[2], partes[0], partes[1]),
-                oficina.getProvinciaId()
+                entity.getId(),
+                new OficinaCodigo(entity.getCodigo()),
+                new OficinaNombre(entity.getNombre()),
+                new OficinaDireccion(
+                        entity.getCodigoPostal(),
+                        entity.getCiudad(),
+                        entity.getCalle(),
+                        entity.getNumero()
+                ),
+                entity.getProvinciaId()
         );
     }
 }
