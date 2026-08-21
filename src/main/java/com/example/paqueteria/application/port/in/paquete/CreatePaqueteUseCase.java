@@ -8,7 +8,7 @@ import com.example.paqueteria.domain.valueobjects.PaquetePeso;
 import java.util.UUID;
 
 public interface CreatePaqueteUseCase {
-    Paquete create(PaqueteCodigoSeguimiento codigoSeguimiento, PaquetePeso peso,
+    Paquete create( PaquetePeso peso,
                    UUID oficinaOrigenId, UUID oficinaDestinoId,
                    DatosContacto remitente, DatosContacto destinatario);
 }

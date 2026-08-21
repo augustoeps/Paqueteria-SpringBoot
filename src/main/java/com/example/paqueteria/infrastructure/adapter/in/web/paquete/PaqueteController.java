@@ -48,20 +48,18 @@ public class PaqueteController {
 
     @PostMapping
     public ResponseEntity<PaqueteResponse> crear(@Valid @RequestBody CrearPaqueteRequest request) {
-        PaqueteCodigoSeguimiento codigo = new PaqueteCodigoSeguimiento(request.codigoSeguimiento());
         PaquetePeso peso = new PaquetePeso(request.peso());
         DatosContacto remitente = toDatosContacto(request.remitente());
         DatosContacto destinatario = toDatosContacto(request.destinatario());
 
         Paquete paquete = createPaqueteUseCase.create(
-                codigo, peso,
+                peso,
                 request.oficinaOrigenId(), request.oficinaDestinoId(),
                 remitente, destinatario
         );
 
         return ResponseEntity.ok(PaqueteResponse.desde(paquete));
     }
-
     @GetMapping("/{id}")
     public ResponseEntity<PaqueteResponse> buscarPorId(@PathVariable UUID id) {
         Optional<Paquete> resultado = findPaqueteByIdUseCase.FindById(id);

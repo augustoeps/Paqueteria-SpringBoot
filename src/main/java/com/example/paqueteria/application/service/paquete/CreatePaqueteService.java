@@ -38,8 +38,7 @@ public class CreatePaqueteService implements CreatePaqueteUseCase {
     }
 
     @Override
-    public Paquete create(PaqueteCodigoSeguimiento codigoSeguimiento, PaquetePeso peso,
-                          UUID oficinaOrigenId, UUID oficinaDestinoId,
+    public Paquete create(PaquetePeso peso, UUID oficinaOrigenId, UUID oficinaDestinoId,
                           DatosContacto remitente, DatosContacto destinatario) {
 
         Optional<Oficina> oficinaOrigen = this.oficinaRepositoryPort.findById(oficinaOrigenId);
@@ -60,6 +59,8 @@ public class CreatePaqueteService implements CreatePaqueteUseCase {
 
         BigDecimal precioAplicado = tarifa.get().calcularPrecio(peso);
         PaqueteTarifaAplicada paqueteTarifaAplicada = new PaqueteTarifaAplicada(precioAplicado);
+
+        PaqueteCodigoSeguimiento codigoSeguimiento = PaqueteCodigoSeguimiento.generar();
 
         Paquete paquete = new Paquete(codigoSeguimiento, peso, oficinaOrigenId, oficinaDestinoId,
                 remitente, destinatario, paqueteTarifaAplicada);

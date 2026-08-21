@@ -9,9 +9,6 @@ import java.math.BigDecimal;
 import java.util.UUID;
 
 public record CrearPaqueteRequest(
-        @NotBlank(message = "El código de seguimiento es obligatorio")
-        String codigoSeguimiento,
-
         @NotNull(message = "El peso es obligatorio")
         @Positive(message = "El peso debe ser mayor que cero")
         BigDecimal peso,
