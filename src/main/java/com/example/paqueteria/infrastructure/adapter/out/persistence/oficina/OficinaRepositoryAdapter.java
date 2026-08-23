@@ -5,11 +5,12 @@ import com.example.paqueteria.domain.entity.Oficina;
 import com.example.paqueteria.infrastructure.adapter.out.persistence.provincia.ProvinciaJpaRepository;
 import com.example.paqueteria.infrastructure.adapter.out.persistence.provincia.ProvinciaMapper;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-@Component
+@Repository
 public class OficinaRepositoryAdapter implements OficinaRepositoryPort {
 
     private final OficinaJpaRepository jpaRepository;

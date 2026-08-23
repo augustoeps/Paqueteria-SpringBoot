@@ -3,11 +3,12 @@ package com.example.paqueteria.infrastructure.adapter.out.persistence.historialE
 import com.example.paqueteria.application.port.out.historialEstado.HistorialEstadoRepositoryPort;
 import com.example.paqueteria.domain.entity.HistorialEstado;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-@Component
+@Repository
 public class HistorialEstadoRepositoryAdapter implements HistorialEstadoRepositoryPort {
 
     private final HistorialEstadoMapper mapper;

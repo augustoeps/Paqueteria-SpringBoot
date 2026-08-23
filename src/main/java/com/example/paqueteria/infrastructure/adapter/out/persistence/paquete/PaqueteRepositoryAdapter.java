@@ -4,12 +4,13 @@ import com.example.paqueteria.application.port.out.paquete.PaqueteRepositoryPort
 import com.example.paqueteria.domain.entity.Paquete;
 import com.example.paqueteria.domain.valueobjects.PaqueteCodigoSeguimiento;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-@Component
+@Repository
 public class PaqueteRepositoryAdapter implements PaqueteRepositoryPort {
 
     private final PaqueteJpaRepository jpaRepository;

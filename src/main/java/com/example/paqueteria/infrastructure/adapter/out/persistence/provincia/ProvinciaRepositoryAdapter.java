@@ -4,12 +4,13 @@ import com.example.paqueteria.application.exception.RecursoNoEncontradoException
 import com.example.paqueteria.application.port.out.provincia.ProvinciaRepositoryPort;
 import com.example.paqueteria.domain.entity.Provincia;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-@Component
+@Repository
 public class ProvinciaRepositoryAdapter implements ProvinciaRepositoryPort {
 
     private final ProvinciaJpaRepository jpaRepository;

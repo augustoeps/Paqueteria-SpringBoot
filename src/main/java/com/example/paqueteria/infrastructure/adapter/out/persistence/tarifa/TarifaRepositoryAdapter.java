@@ -3,11 +3,13 @@ package com.example.paqueteria.infrastructure.adapter.out.persistence.tarifa;
 import com.example.paqueteria.application.port.out.tarifa.TarifaRepositoryPort;
 import com.example.paqueteria.domain.entity.Tarifa;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-@Component
+@Repository
+
 public class TarifaRepositoryAdapter implements TarifaRepositoryPort {
 
     private final TarifaMapper mapper;
