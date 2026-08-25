@@ -12,6 +12,7 @@ import com.example.paqueteria.infrastructure.adapter.in.web.oficina.dto.CrearOfi
 import com.example.paqueteria.infrastructure.adapter.in.web.oficina.dto.OficinaResponse;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -37,6 +38,7 @@ public class OficinaController {
         this.deleteOficinaUseCase = deleteOficinaUseCase;
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @PostMapping
     public ResponseEntity<OficinaResponse> crear(@Valid @RequestBody CrearOficinaRequest request) {
         OficinaCodigo codigo = new OficinaCodigo(request.codigo());
@@ -77,6 +79,7 @@ public class OficinaController {
         return ResponseEntity.ok(response);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminar(@PathVariable UUID id) {
         boolean eliminado = deleteOficinaUseCase.delete(id);

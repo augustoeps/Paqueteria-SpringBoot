@@ -9,6 +9,7 @@ import com.example.paqueteria.domain.valueobjects.PaquetePeso;
 import com.example.paqueteria.infrastructure.adapter.in.web.paquete.dto.*;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -45,7 +46,7 @@ public class PaqueteController {
         this.entregarPaqueteUseCase = entregarPaqueteUseCase;
         this.cancelarPaqueteUseCase = cancelarPaqueteUseCase;
     }
-
+    @PreAuthorize("hasAnyRole('ADMIN', 'EMPLEADO')")
     @PostMapping
     public ResponseEntity<PaqueteResponse> crear(@Valid @RequestBody CrearPaqueteRequest request) {
         PaquetePeso peso = new PaquetePeso(request.peso());
@@ -60,6 +61,8 @@ public class PaqueteController {
 
         return ResponseEntity.ok(PaqueteResponse.desde(paquete));
     }
+
+    @PreAuthorize("hasAnyRole('ADMIN', 'EMPLEADO')")
     @GetMapping("/{id}")
     public ResponseEntity<PaqueteResponse> buscarPorId(@PathVariable UUID id) {
         Optional<Paquete> resultado = findPaqueteByIdUseCase.FindById(id);
@@ -71,6 +74,7 @@ public class PaqueteController {
         }
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'EMPLEADO')")
     @GetMapping("/codigo/{codigoSeguimiento}")
     public ResponseEntity<PaqueteResponse> buscarPorCodigo(@PathVariable String codigoSeguimiento) {
         PaqueteCodigoSeguimiento codigo = new PaqueteCodigoSeguimiento(codigoSeguimiento);
@@ -83,6 +87,7 @@ public class PaqueteController {
         }
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'EMPLEADO')")
     @GetMapping
     public ResponseEntity<List<PaqueteResponse>> findAll() {
         List<Paquete> paquetes = findAllPaqueteUseCase.findAll();
@@ -91,25 +96,28 @@ public class PaqueteController {
                 .toList();
         return ResponseEntity.ok(response);
     }
-
+    @PreAuthorize("hasAnyRole('ADMIN', 'EMPLEADO')")
     @PatchMapping("/{id}/poner-en-transito")
     public ResponseEntity<PaqueteResponse> ponerEnTransito(@PathVariable UUID id, @Valid @RequestBody CambiarEstadoPaqueteRequest request) {
         Paquete paquete = ponerEnTransitoUseCase.ponerEnTransito(id, request.oficinaId());
         return ResponseEntity.ok(PaqueteResponse.desde(paquete));
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'EMPLEADO')")
     @PatchMapping("/{id}/registrar-llegada-destino")
     public ResponseEntity<PaqueteResponse> registrarLlegadaDestino(@PathVariable UUID id, @Valid @RequestBody CambiarEstadoPaqueteRequest request) {
         Paquete paquete = registrarLlegadaDestinoUseCase.registrarLlegadaDestino(id, request.oficinaId());
         return ResponseEntity.ok(PaqueteResponse.desde(paquete));
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'EMPLEADO')")
     @PatchMapping("/{id}/entregar")
     public ResponseEntity<PaqueteResponse> entregar(@PathVariable UUID id, @Valid @RequestBody CambiarEstadoPaqueteRequest request) {
         Paquete paquete = entregarPaqueteUseCase.entregar(id, request.oficinaId());
         return ResponseEntity.ok(PaqueteResponse.desde(paquete));
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'EMPLEADO')")
     @PatchMapping("/{id}/cancelar")
     public ResponseEntity<PaqueteResponse> cancelar(@PathVariable UUID id, @Valid @RequestBody CambiarEstadoPaqueteRequest request) {
         Paquete paquete = cancelarPaqueteUseCase.cancelar(id, request.oficinaId());

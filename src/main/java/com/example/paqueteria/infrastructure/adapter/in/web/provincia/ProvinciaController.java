@@ -10,6 +10,7 @@ import com.example.paqueteria.infrastructure.adapter.in.web.provincia.dto.CrearP
 import com.example.paqueteria.infrastructure.adapter.in.web.provincia.dto.ProvinciaResponse;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -34,7 +35,7 @@ public class ProvinciaController {
         this.findAllProvinciaUseCase = findAllProvinciaUseCase;
         this.deleteProvinciaUseCase = deleteProvinciaUseCase;
     }
-
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public ResponseEntity<ProvinciaResponse> create(@Valid @RequestBody CrearProvinciaRequest request) {
 
@@ -68,6 +69,7 @@ public class ProvinciaController {
 
         return ResponseEntity.ok(response);
     }
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminar(@PathVariable UUID id) {
         boolean eliminado = deleteProvinciaUseCase.delete(id);

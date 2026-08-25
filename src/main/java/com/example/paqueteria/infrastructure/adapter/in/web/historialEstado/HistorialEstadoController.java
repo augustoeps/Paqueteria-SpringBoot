@@ -5,6 +5,7 @@ import com.example.paqueteria.application.port.in.historialEstado.FindHistorialB
 import com.example.paqueteria.domain.entity.HistorialEstado;
 import com.example.paqueteria.infrastructure.adapter.in.web.historialEstado.dto.HistorialEstadoResponse;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,6 +25,7 @@ public class HistorialEstadoController {
         this.findHistorialByPaqueteIdUseCase = findHistorialByPaqueteIdUseCase;
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'EMPLEADO')")
     @GetMapping("/{id}")
     public ResponseEntity<HistorialEstadoResponse> buscarPorId(@PathVariable UUID id) {
         Optional<HistorialEstado> resultado = findHistorialByIdUseCase.findById(id);
@@ -35,6 +37,7 @@ public class HistorialEstadoController {
         }
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'EMPLEADO')")
     @GetMapping("/paquete/{paqueteId}")
     public ResponseEntity<List<HistorialEstadoResponse>> buscarPorPaqueteId(@PathVariable UUID paqueteId) {
         List<HistorialEstado> historial = findHistorialByPaqueteIdUseCase.findByPaqueteId(paqueteId);

@@ -7,6 +7,7 @@ import com.example.paqueteria.domain.valueobjects.TarifaPrecioPorKilogramo;
 import com.example.paqueteria.infrastructure.adapter.in.web.tarifa.dto.*;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -41,7 +42,7 @@ public class TarifaController {
         this.deleteTarifaUseCase = deleteTarifaUseCase;
         this.cotizarEnvioUseCase = cotizarEnvioUseCase;
     }
-
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public ResponseEntity<TarifaResponse> crear(@Valid @RequestBody CrearTarifaRequest request) {
         TarifaPrecioPorKilogramo precio = new TarifaPrecioPorKilogramo(request.precioPorKilogramo());
@@ -90,14 +91,14 @@ public class TarifaController {
             return ResponseEntity.notFound().build();
         }
     }
-
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<TarifaResponse> actualizar(@PathVariable UUID id, @Valid @RequestBody UpdateTarifaRequest request) {
         TarifaPrecioPorKilogramo precio = new TarifaPrecioPorKilogramo(request.precioPorKilogramo());
         Tarifa tarifa = updateTarifaUseCase.update(id, precio);
         return ResponseEntity.ok(TarifaResponse.desde(tarifa));
     }
-
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminar(@PathVariable UUID id) {
         boolean eliminado = deleteTarifaUseCase.delete(id);

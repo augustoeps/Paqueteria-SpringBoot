@@ -11,6 +11,7 @@ import com.example.paqueteria.infrastructure.adapter.in.web.usuario.dto.CrearUsu
 import com.example.paqueteria.infrastructure.adapter.in.web.usuario.dto.UsuarioResponse;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,7 +19,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/Usuarios")
+@RequestMapping("/usuarios")
 public class UsuarioController  {
 
 
@@ -40,6 +41,7 @@ public class UsuarioController  {
         this.changeRolUsuarioUseCase = changeRolUsuarioUseCase;
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public ResponseEntity<UsuarioResponse> create(@Valid @RequestBody CrearUsuarioRequest request){
 
@@ -53,6 +55,7 @@ public class UsuarioController  {
 
         return ResponseEntity.ok(UsuarioResponse.desde(usuario));
     }
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/{id}")
     public ResponseEntity<UsuarioResponse> findById(@PathVariable UUID id) {
 
@@ -62,7 +65,7 @@ public class UsuarioController  {
         }
         return ResponseEntity.notFound().build();
     }
-
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
     public ResponseEntity<List<UsuarioResponse>> findAll() {
 
@@ -74,7 +77,7 @@ public class UsuarioController  {
 
         return ResponseEntity.ok(response);
     }
-
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable UUID id) {
 
@@ -86,7 +89,7 @@ public class UsuarioController  {
 
         return ResponseEntity.noContent().build();
     }
-
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/username/{username}")
     public ResponseEntity<UsuarioResponse> findByUserName(@PathVariable String username) {
         UsuarioUsername usuarioUsername = new UsuarioUsername(username);
@@ -96,7 +99,7 @@ public class UsuarioController  {
         }
         return ResponseEntity.notFound().build();
     }
-
+    @PreAuthorize("hasRole('ADMIN')")
     @PatchMapping("/{id}/contrasena")
     public ResponseEntity<UsuarioResponse> cambiarContrasena(@PathVariable UUID id, @Valid @RequestBody CambiarContrasenaRequest request) {
 
@@ -107,7 +110,7 @@ public class UsuarioController  {
         return ResponseEntity.ok(UsuarioResponse.desde(usuario));
 
     }
-
+    @PreAuthorize("hasRole('ADMIN')")
     @PatchMapping("/{id}/rol")
     public ResponseEntity<UsuarioResponse> cambiarContrasena(@PathVariable UUID id, @Valid @RequestBody CambiarRolRequest request) {
 
