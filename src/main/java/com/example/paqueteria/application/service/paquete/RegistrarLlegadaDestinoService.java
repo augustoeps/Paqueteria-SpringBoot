@@ -9,6 +9,7 @@ import com.example.paqueteria.domain.entity.HistorialEstado;
 import com.example.paqueteria.domain.entity.Oficina;
 import com.example.paqueteria.domain.entity.Paquete;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -27,6 +28,7 @@ public class RegistrarLlegadaDestinoService implements RegistrarLlegadaDestinoUs
     }
 
     @Override
+    @Transactional
     public Paquete registrarLlegadaDestino(UUID paqueteId, UUID oficinaId) {
         Optional<Oficina> oficina = this.oficinaRepositoryPort.findById(oficinaId);
         Optional<Paquete> paquete = this.paqueteRepositoryPort.findById(paqueteId);

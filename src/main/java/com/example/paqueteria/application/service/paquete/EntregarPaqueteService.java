@@ -10,6 +10,7 @@ import com.example.paqueteria.domain.entity.HistorialEstado;
 import com.example.paqueteria.domain.entity.Oficina;
 import com.example.paqueteria.domain.entity.Paquete;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -28,6 +29,7 @@ public class EntregarPaqueteService implements EntregarPaqueteUseCase {
     }
 
     @Override
+    @Transactional
     public Paquete entregar(UUID paqueteId, UUID oficinaId) {
         Optional<Oficina> oficina = this.oficinaRepositoryPort.findById(oficinaId);
         Optional<Paquete> paquete = this.paqueteRepositoryPort.findById(paqueteId);
@@ -36,10 +38,10 @@ public class EntregarPaqueteService implements EntregarPaqueteUseCase {
         }
         HistorialEstado historialEstado = paquete.get().entregar(oficinaId);
 
-        Paquete paqueteActulizado = this.paqueteRepositoryPort.save(paquete.get());
+        Paquete paqueteActualizado = this.paqueteRepositoryPort.save(paquete.get());
 
         this.historialEstadoRepositoryPort.save(historialEstado);
 
-        return paqueteActulizado;
+        return paqueteActualizado;
     }
 }

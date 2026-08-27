@@ -185,8 +185,7 @@ public class SecurityBeansConfig {
      * Por eso es una pieza fundamental del LOGIN.
      */
     @Bean
-    public AuthenticationManager authenticationManager(
-            AuthenticationConfiguration config) throws Exception {
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
 
         return config.getAuthenticationManager();
     }

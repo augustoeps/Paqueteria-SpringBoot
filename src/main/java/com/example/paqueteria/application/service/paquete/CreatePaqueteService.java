@@ -15,6 +15,8 @@ import com.example.paqueteria.domain.valueobjects.PaqueteCodigoSeguimiento;
 import com.example.paqueteria.domain.valueobjects.PaquetePeso;
 import com.example.paqueteria.domain.valueobjects.PaqueteTarifaAplicada;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 
 import java.math.BigDecimal;
 import java.util.Optional;
@@ -38,6 +40,7 @@ public class CreatePaqueteService implements CreatePaqueteUseCase {
     }
 
     @Override
+    @Transactional
     public Paquete create(PaquetePeso peso, UUID oficinaOrigenId, UUID oficinaDestinoId,
                           DatosContacto remitente, DatosContacto destinatario) {
 
@@ -66,6 +69,7 @@ public class CreatePaqueteService implements CreatePaqueteUseCase {
                 remitente, destinatario, paqueteTarifaAplicada);
 
         Paquete paqueteGuardado = this.paqueteRepositoryPort.save(paquete);
+
 
         HistorialEstado historialInicial = paqueteGuardado.crearHistorialInicial(oficinaOrigenId);
         historialEstadoRepositoryPort.save(historialInicial);

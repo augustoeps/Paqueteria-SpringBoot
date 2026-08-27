@@ -9,6 +9,7 @@ import com.example.paqueteria.domain.entity.HistorialEstado;
 import com.example.paqueteria.domain.entity.Oficina;
 import com.example.paqueteria.domain.entity.Paquete;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -25,6 +26,7 @@ public class PonerEnTransitoService implements PonerEnTransitoUseCase {
     }
 
     @Override
+    @Transactional
     public Paquete ponerEnTransito(UUID paqueteId, UUID oficinaId) {
 
         Optional<Paquete> paquete = this.paqueteRepositoryPort.findById(paqueteId);
