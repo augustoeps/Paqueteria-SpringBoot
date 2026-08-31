@@ -1,5 +1,9 @@
 package com.example.paqueteria.application.port.out.notifications;
 
+import com.example.paqueteria.application.port.out.pdf.CreatePdfEvento;
+
 public interface EventPublisherPort {
-    void publicar(NotificacionEmailEvento evento);
+    void publicarEmail(NotificacionEmailEvento evento);
+
+    void publicarPdf(CreatePdfEvento evento);
 }

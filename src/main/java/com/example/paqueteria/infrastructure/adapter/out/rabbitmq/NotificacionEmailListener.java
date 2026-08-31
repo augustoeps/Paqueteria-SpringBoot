@@ -16,7 +16,7 @@ public class NotificacionEmailListener {
         this.emailPort = emailPort;
     }
 
-    @RabbitListener(queues = RabbitMQConfig.QUEUE_NAME)
+    @RabbitListener(queues = RabbitMQConfig.QUEUE_EMAIL_NAME)
     public void escuchar(NotificacionEmailEvento evento) {
         emailPort.send(evento.destinatario(), evento.asunto(), evento.cuerpo());
     }

@@ -3,6 +3,8 @@ package com.example.paqueteria.application.service.paquete;
 import com.example.paqueteria.application.exception.RecursoNoEncontradoException;
 import com.example.paqueteria.application.port.in.paquete.PonerEnTransitoUseCase;
 import com.example.paqueteria.application.port.out.historialEstado.HistorialEstadoRepositoryPort;
+import com.example.paqueteria.application.port.out.notifications.EventPublisherPort;
+import com.example.paqueteria.application.port.out.notifications.NotificacionEmailEvento;
 import com.example.paqueteria.application.port.out.oficina.OficinaRepositoryPort;
 import com.example.paqueteria.application.port.out.paquete.PaqueteRepositoryPort;
 import com.example.paqueteria.domain.entity.HistorialEstado;
@@ -11,6 +13,7 @@ import com.example.paqueteria.domain.entity.Paquete;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
 @Service
@@ -19,10 +22,13 @@ public class PonerEnTransitoService implements PonerEnTransitoUseCase {
     private final PaqueteRepositoryPort paqueteRepositoryPort;
     private final OficinaRepositoryPort oficinaRepositoryPort;
     private  final HistorialEstadoRepositoryPort historialEstadoRepositoryPort;
-    public PonerEnTransitoService(PaqueteRepositoryPort paqueteRepositoryPort,OficinaRepositoryPort oficinaRepositoryPort, HistorialEstadoRepositoryPort historialEstadoRepositoryPort){
+    private final EventPublisherPort eventPublisherPort;
+
+    public PonerEnTransitoService(PaqueteRepositoryPort paqueteRepositoryPort, OficinaRepositoryPort oficinaRepositoryPort, HistorialEstadoRepositoryPort historialEstadoRepositoryPort, EventPublisherPort eventPublisherPort){
         this.paqueteRepositoryPort = paqueteRepositoryPort;
         this.oficinaRepositoryPort = oficinaRepositoryPort;
         this.historialEstadoRepositoryPort = historialEstadoRepositoryPort;
+        this.eventPublisherPort = eventPublisherPort;
     }
 
     @Override
@@ -40,6 +46,16 @@ public class PonerEnTransitoService implements PonerEnTransitoUseCase {
 
         Paquete paqueteActualizado = this.paqueteRepositoryPort.save(paquete.get()); // ← faltaba esto
         this.historialEstadoRepositoryPort.save(historialEstado);
+
+        String cuerpo = "Su paquete con código " + paqueteActualizado.getCodigoSeguimiento().getCodigo()
+                + " se encuentra en transito   en la oficina " + oficina.get().getDireccion().toString() + " en el dia " + new Date();
+
+        NotificacionEmailEvento evento = new NotificacionEmailEvento(
+                paqueteActualizado.getDestinatario().getEmail(),
+                "Paquete En Transito",
+                cuerpo
+        );
+        this.eventPublisherPort.publicarEmail(evento);
 
         return paqueteActualizado;
     }

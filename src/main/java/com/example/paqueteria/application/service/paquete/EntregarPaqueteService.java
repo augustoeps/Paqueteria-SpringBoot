@@ -4,6 +4,8 @@ package com.example.paqueteria.application.service.paquete;
 import com.example.paqueteria.application.exception.RecursoNoEncontradoException;
 import com.example.paqueteria.application.port.in.paquete.EntregarPaqueteUseCase;
 import com.example.paqueteria.application.port.out.historialEstado.HistorialEstadoRepositoryPort;
+import com.example.paqueteria.application.port.out.notifications.EventPublisherPort;
+import com.example.paqueteria.application.port.out.notifications.NotificacionEmailEvento;
 import com.example.paqueteria.application.port.out.oficina.OficinaRepositoryPort;
 import com.example.paqueteria.application.port.out.paquete.PaqueteRepositoryPort;
 import com.example.paqueteria.domain.entity.HistorialEstado;
@@ -12,6 +14,7 @@ import com.example.paqueteria.domain.entity.Paquete;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -21,11 +24,13 @@ public class EntregarPaqueteService implements EntregarPaqueteUseCase {
     private final PaqueteRepositoryPort paqueteRepositoryPort;
     private final OficinaRepositoryPort oficinaRepositoryPort;
     private final HistorialEstadoRepositoryPort historialEstadoRepositoryPort;
+    private final EventPublisherPort eventPublisherPort;
 
-    public EntregarPaqueteService(PaqueteRepositoryPort paqueteRepositoryPort, OficinaRepositoryPort oficinaRepositoryPort, HistorialEstadoRepositoryPort historialEstadoRepositoryPort){
+    public EntregarPaqueteService(PaqueteRepositoryPort paqueteRepositoryPort, OficinaRepositoryPort oficinaRepositoryPort, HistorialEstadoRepositoryPort historialEstadoRepositoryPort, EventPublisherPort eventPublisherPort){
         this.paqueteRepositoryPort = paqueteRepositoryPort;
         this.oficinaRepositoryPort = oficinaRepositoryPort;
         this.historialEstadoRepositoryPort = historialEstadoRepositoryPort;
+        this.eventPublisherPort = eventPublisherPort;
     }
 
     @Override
@@ -42,6 +47,16 @@ public class EntregarPaqueteService implements EntregarPaqueteUseCase {
 
         this.historialEstadoRepositoryPort.save(historialEstado);
 
+        String cuerpo = "Su paquete con código " + paqueteActualizado.getCodigoSeguimiento().getCodigo()
+                + " fue entregado el día " + new Date() + " en la oficina " + oficina.get().getDireccion().toString();
+
+        NotificacionEmailEvento evento = new NotificacionEmailEvento(
+                paqueteActualizado.getDestinatario().getEmail(),
+                "Paquete Entregado con éxito",
+                cuerpo
+        );
+
+        this.eventPublisherPort.publicarEmail(evento);
         return paqueteActualizado;
     }
 }

@@ -89,7 +89,7 @@ public class CreatePaqueteService implements CreatePaqueteUseCase {
                 "Paquete registrado con éxito",
                 cuerpo
         );
-        this.eventPublisherPort.publicar(evento);
+        this.eventPublisherPort.publicarEmail(evento);
 
 
         return paqueteGuardado;

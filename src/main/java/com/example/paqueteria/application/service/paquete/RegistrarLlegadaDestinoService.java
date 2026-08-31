@@ -3,6 +3,8 @@ package com.example.paqueteria.application.service.paquete;
 import com.example.paqueteria.application.exception.RecursoNoEncontradoException;
 import com.example.paqueteria.application.port.in.paquete.RegistrarLlegadaDestinoUseCase;
 import com.example.paqueteria.application.port.out.historialEstado.HistorialEstadoRepositoryPort;
+import com.example.paqueteria.application.port.out.notifications.EventPublisherPort;
+import com.example.paqueteria.application.port.out.notifications.NotificacionEmailEvento;
 import com.example.paqueteria.application.port.out.oficina.OficinaRepositoryPort;
 import com.example.paqueteria.application.port.out.paquete.PaqueteRepositoryPort;
 import com.example.paqueteria.domain.entity.HistorialEstado;
@@ -11,6 +13,7 @@ import com.example.paqueteria.domain.entity.Paquete;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -20,11 +23,13 @@ public class RegistrarLlegadaDestinoService implements RegistrarLlegadaDestinoUs
     private final PaqueteRepositoryPort paqueteRepositoryPort;
     private final OficinaRepositoryPort oficinaRepositoryPort;
     private final HistorialEstadoRepositoryPort historialEstadoRepositoryPort;
+    private final EventPublisherPort eventPublisherPort;
 
-    public RegistrarLlegadaDestinoService(PaqueteRepositoryPort paqueteRepositoryPort, OficinaRepositoryPort oficinaRepositoryPort, HistorialEstadoRepositoryPort historialEstadoRepositoryPort){
+    public RegistrarLlegadaDestinoService(PaqueteRepositoryPort paqueteRepositoryPort, OficinaRepositoryPort oficinaRepositoryPort, HistorialEstadoRepositoryPort historialEstadoRepositoryPort, EventPublisherPort eventPublisherPort){
         this.paqueteRepositoryPort = paqueteRepositoryPort;
         this.oficinaRepositoryPort = oficinaRepositoryPort;
         this.historialEstadoRepositoryPort = historialEstadoRepositoryPort;
+        this.eventPublisherPort = eventPublisherPort;
     }
 
     @Override
@@ -37,10 +42,20 @@ public class RegistrarLlegadaDestinoService implements RegistrarLlegadaDestinoUs
         }
         HistorialEstado historialEstado = paquete.get().registrarLlegadaDestino(oficinaId);
 
-        Paquete paqueteActulizado = this.paqueteRepositoryPort.save(paquete.get());
+        Paquete paqueteActualizado = this.paqueteRepositoryPort.save(paquete.get());
 
         this.historialEstadoRepositoryPort.save(historialEstado);
 
-        return paqueteActulizado;
+        String cuerpo = "Su paquete con código " + paqueteActualizado.getCodigoSeguimiento().getCodigo()
+                + " ya se puede retitar en la oficina " + oficina.get().getDireccion().toString();
+
+        NotificacionEmailEvento evento = new NotificacionEmailEvento(
+                paqueteActualizado.getDestinatario().getEmail(),
+                "Paquete Listo para Retirar",
+                cuerpo
+        );
+        this.eventPublisherPort.publicarEmail(evento);
+
+        return paqueteActualizado;
     }
 }

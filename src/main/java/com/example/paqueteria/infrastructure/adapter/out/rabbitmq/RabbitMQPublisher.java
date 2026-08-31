@@ -2,6 +2,7 @@ package com.example.paqueteria.infrastructure.adapter.out.rabbitmq;
 
 import com.example.paqueteria.application.port.out.notifications.EventPublisherPort;
 import com.example.paqueteria.application.port.out.notifications.NotificacionEmailEvento;
+import com.example.paqueteria.application.port.out.pdf.CreatePdfEvento;
 import com.example.paqueteria.infrastructure.config.rabbitmq.RabbitMQConfig;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Component;
@@ -26,7 +27,7 @@ public class RabbitMQPublisher implements EventPublisherPort {
 
     // Método público que cualquier otra parte de la aplicación (a través
     // de un puerto que aún vamos a construir) puede usar para publicar un evento.
-    public void publicar(NotificacionEmailEvento evento) {
+    public void publicarEmail(NotificacionEmailEvento evento) {
 
         // convertAndSend hace dos cosas en una sola llamada:
         // 1. CONVIERTE el objeto "evento" a su representación en bytes,
@@ -39,5 +40,10 @@ public class RabbitMQPublisher implements EventPublisherPort {
                 RabbitMQConfig.ROUTING_KEY,     // Con qué "etiqueta" viaja el mensaje
                 evento                          // El contenido real del mensaje
         );
+    }
+
+    @Override
+    public void publicarPdf(CreatePdfEvento evento) {
+
     }
 }
