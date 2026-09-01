@@ -37,13 +37,19 @@ public class RabbitMQPublisher implements EventPublisherPort {
         //    (usando los Bindings ya configurados) a qué cola(s) entregarlo.
         rabbitTemplate.convertAndSend(
                 RabbitMQConfig.EXCHANGE_NAME,   // A qué Exchange se entrega el mensaje
-                RabbitMQConfig.ROUTING_KEY,     // Con qué "etiqueta" viaja el mensaje
+                RabbitMQConfig.ROUTING_KEY_NOTIFICACION,     // Con qué "etiqueta" viaja el mensaje
                 evento                          // El contenido real del mensaje
         );
     }
 
     @Override
     public void publicarPdf(CreatePdfEvento evento) {
+
+        rabbitTemplate.convertAndSend(
+                RabbitMQConfig.EXCHANGE_NAME,   // A qué Exchange se entrega el mensaje
+                RabbitMQConfig.ROUTING_KEY_GENERAR_PDF,     // Con qué "etiqueta" viaja el mensaje
+                evento                          // El contenido real del mensaje
+        );
 
     }
 }

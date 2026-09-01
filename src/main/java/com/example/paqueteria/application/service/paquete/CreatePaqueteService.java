@@ -8,6 +8,7 @@ import com.example.paqueteria.application.port.out.notifications.EventPublisherP
 import com.example.paqueteria.application.port.out.notifications.NotificacionEmailEvento;
 import com.example.paqueteria.application.port.out.oficina.OficinaRepositoryPort;
 import com.example.paqueteria.application.port.out.paquete.PaqueteRepositoryPort;
+import com.example.paqueteria.application.port.out.pdf.CreatePdfEvento;
 import com.example.paqueteria.application.port.out.tarifa.TarifaRepositoryPort;
 import com.example.paqueteria.domain.entity.HistorialEstado;
 import com.example.paqueteria.domain.entity.Oficina;
@@ -91,6 +92,9 @@ public class CreatePaqueteService implements CreatePaqueteUseCase {
         );
         this.eventPublisherPort.publicarEmail(evento);
 
+        CreatePdfEvento eventoPdf = new CreatePdfEvento(remitente.getNombre(), destinatario.getNombre(), peso.getKilogramos(), precioAplicado,paquete.getFechaCreacion().toString());
+
+        this.eventPublisherPort.publicarPdf(eventoPdf);
 
         return paqueteGuardado;
     }
