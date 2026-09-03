@@ -2,6 +2,7 @@ package com.example.paqueteria.application.service.paquete;
 
 import com.example.paqueteria.application.exception.RecursoNoEncontradoException;
 import com.example.paqueteria.application.port.in.paquete.CreatePaqueteUseCase;
+import com.example.paqueteria.application.port.out.estadisticas.PaqueteEstadisticaEvento;
 import com.example.paqueteria.application.port.out.historialEstado.HistorialEstadoRepositoryPort;
 import com.example.paqueteria.application.port.out.notifications.EmailPort;
 import com.example.paqueteria.application.port.out.notifications.EventPublisherPort;
@@ -92,10 +93,23 @@ public class CreatePaqueteService implements CreatePaqueteUseCase {
         );
         this.eventPublisherPort.publicarEmail(evento);
 
+        //Genera el pdf
         CreatePdfEvento eventoPdf = new CreatePdfEvento(remitente.getNombre(), destinatario.getNombre(), peso.getKilogramos(), precioAplicado,paquete.getFechaCreacion().toString());
-
         this.eventPublisherPort.publicarPdf(eventoPdf);
 
+        //Envia datos al microservicio
+
+        PaqueteEstadisticaEvento eventoEstadistica = new PaqueteEstadisticaEvento(
+                paqueteGuardado.getId(),
+                paqueteGuardado.getEstadoPaquete().name(),  // String, no el enum directo
+                paqueteGuardado.getTarifaAplicada().getMonto(),
+                oficinaOrigenId,
+                oficinaOrigen.get().getProvinciaId(),
+                oficinaDestino.get().getProvinciaId(),
+                paqueteGuardado.getFechaCreacion()
+        );
+
+        this.eventPublisherPort.publicarEstadistica(eventoEstadistica);
         return paqueteGuardado;
     }
 }

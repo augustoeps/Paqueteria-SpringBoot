@@ -23,6 +23,7 @@ public class RabbitMQConfig {
     public static final String QUEUE_EMAIL_NAME = "paquete.notificaciones.email";
     public static final String QUEUE_SMS_NAME = "paquete.notificaciones.sms";
     public static final String QUEUE_PDF_NAME = "paquete.generar.pdf";
+    public static final String QUEUE_MICROSERVICIO_ESTADISTICAS = "paquete.estadisticas";
 
     // ==========================================================
     // EXCHANGE
@@ -48,7 +49,7 @@ public class RabbitMQConfig {
 
     public static final String ROUTING_KEY_NOTIFICACION = "paquete.cambio-estado";
     public static final String ROUTING_KEY_GENERAR_PDF = "paquete.generar-pdf";
-
+    public static final String ROUTING_KEY_ESTADISTICAS = "paquete.estadistica-evento";
     // ----------------------------------------------------------
     // DECLARACIÓN DE COLAS
     // ----------------------------------------------------------
@@ -67,6 +68,11 @@ public class RabbitMQConfig {
     public Queue pdfQueue() {
         return new Queue(QUEUE_PDF_NAME, true);
     }
+    @Bean
+    public Queue estadisticasQueue() {
+        return new Queue(QUEUE_MICROSERVICIO_ESTADISTICAS, true);
+    }
+
 
     // ----------------------------------------------------------
     // DECLARACIÓN DEL EXCHANGE PRINCIPAL
@@ -104,4 +110,10 @@ public class RabbitMQConfig {
     public Binding pdfBinding(Queue pdfQueue, TopicExchange exchange) {
         return BindingBuilder.bind(pdfQueue).to(exchange).with(ROUTING_KEY_GENERAR_PDF);
     }
+
+    @Bean
+    public Binding estadisticasBinding(Queue estadisticasQueue, TopicExchange exchange) {
+        return BindingBuilder.bind(estadisticasQueue).to(exchange).with(ROUTING_KEY_ESTADISTICAS);
+    }
+
 }

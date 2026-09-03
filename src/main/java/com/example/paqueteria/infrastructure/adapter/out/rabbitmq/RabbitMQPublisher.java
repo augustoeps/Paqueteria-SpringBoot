@@ -1,5 +1,6 @@
 package com.example.paqueteria.infrastructure.adapter.out.rabbitmq;
 
+import com.example.paqueteria.application.port.out.estadisticas.PaqueteEstadisticaEvento;
 import com.example.paqueteria.application.port.out.notifications.EventPublisherPort;
 import com.example.paqueteria.application.port.out.notifications.NotificacionEmailEvento;
 import com.example.paqueteria.application.port.out.pdf.CreatePdfEvento;
@@ -51,5 +52,14 @@ public class RabbitMQPublisher implements EventPublisherPort {
                 evento                          // El contenido real del mensaje
         );
 
+    }
+
+    @Override
+    public void publicarEstadistica(PaqueteEstadisticaEvento evento) {
+        rabbitTemplate.convertAndSend(
+                RabbitMQConfig.EXCHANGE_NAME,   // A qué Exchange se entrega el mensaje
+                RabbitMQConfig.ROUTING_KEY_ESTADISTICAS,     // Con qué "etiqueta" viaja el mensaje
+                evento                          // El contenido real del mensaje
+        );
     }
 }

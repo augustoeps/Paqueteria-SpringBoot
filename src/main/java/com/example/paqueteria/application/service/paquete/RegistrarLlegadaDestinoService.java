@@ -2,6 +2,7 @@ package com.example.paqueteria.application.service.paquete;
 
 import com.example.paqueteria.application.exception.RecursoNoEncontradoException;
 import com.example.paqueteria.application.port.in.paquete.RegistrarLlegadaDestinoUseCase;
+import com.example.paqueteria.application.port.out.estadisticas.PaqueteEstadisticaEvento;
 import com.example.paqueteria.application.port.out.historialEstado.HistorialEstadoRepositoryPort;
 import com.example.paqueteria.application.port.out.notifications.EventPublisherPort;
 import com.example.paqueteria.application.port.out.notifications.NotificacionEmailEvento;
@@ -37,13 +38,12 @@ public class RegistrarLlegadaDestinoService implements RegistrarLlegadaDestinoUs
     public Paquete registrarLlegadaDestino(UUID paqueteId, UUID oficinaId) {
         Optional<Oficina> oficina = this.oficinaRepositoryPort.findById(oficinaId);
         Optional<Paquete> paquete = this.paqueteRepositoryPort.findById(paqueteId);
-        if(oficina.isEmpty() || paquete.isEmpty()){
+        if (oficina.isEmpty() || paquete.isEmpty()) {
             throw new RecursoNoEncontradoException("Oficina o paquete no encontrado");
         }
         HistorialEstado historialEstado = paquete.get().registrarLlegadaDestino(oficinaId);
 
         Paquete paqueteActualizado = this.paqueteRepositoryPort.save(paquete.get());
-
         this.historialEstadoRepositoryPort.save(historialEstado);
 
         String cuerpo = "Su paquete con código " + paqueteActualizado.getCodigoSeguimiento().getCodigo()
@@ -55,6 +55,25 @@ public class RegistrarLlegadaDestinoService implements RegistrarLlegadaDestinoUs
                 cuerpo
         );
         this.eventPublisherPort.publicarEmail(evento);
+
+        Optional<Oficina> oficinaOrigen = this.oficinaRepositoryPort.findById(paqueteActualizado.getOficinaOrigenId());
+        Optional<Oficina> oficinaDestino = this.oficinaRepositoryPort.findById(paqueteActualizado.getOficinaDestinoId());
+
+        if (oficinaOrigen.isEmpty() || oficinaDestino.isEmpty()) {
+            throw new RecursoNoEncontradoException("No se pudo resolver la oficina de origen/destino del paquete");
+        }
+
+        PaqueteEstadisticaEvento eventoEstadistica = new PaqueteEstadisticaEvento(
+                paqueteActualizado.getId(),
+                paqueteActualizado.getEstadoPaquete().name(),
+                paqueteActualizado.getTarifaAplicada().getMonto(),
+                oficinaId,
+                oficinaOrigen.get().getProvinciaId(),
+                oficinaDestino.get().getProvinciaId(),
+                paqueteActualizado.getFechaCreacion()
+        );
+
+        this.eventPublisherPort.publicarEstadistica(eventoEstadistica);
 
         return paqueteActualizado;
     }

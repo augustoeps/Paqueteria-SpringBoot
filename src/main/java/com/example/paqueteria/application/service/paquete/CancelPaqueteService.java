@@ -2,6 +2,7 @@ package com.example.paqueteria.application.service.paquete;
 
 import com.example.paqueteria.application.exception.RecursoNoEncontradoException;
 import com.example.paqueteria.application.port.in.paquete.CancelarPaqueteUseCase;
+import com.example.paqueteria.application.port.out.estadisticas.PaqueteEstadisticaEvento;
 import com.example.paqueteria.application.port.out.historialEstado.HistorialEstadoRepositoryPort;
 import com.example.paqueteria.application.port.out.notifications.EventPublisherPort;
 import com.example.paqueteria.application.port.out.notifications.NotificacionEmailEvento;
@@ -39,7 +40,7 @@ public class CancelPaqueteService implements CancelarPaqueteUseCase {
 
         Optional<Oficina> oficina = this.oficinaRepositoryPort.findById(oficinaId);
         Optional<Paquete> paquete = this.paqueteRepositoryPort.findById(paqueteId);
-        if(oficina.isEmpty() || paquete.isEmpty()){
+        if (oficina.isEmpty() || paquete.isEmpty()) {
             throw new RecursoNoEncontradoException("Oficina o paquete no encontrado");
         }
         HistorialEstado historialEstado = paquete.get().cancelar(oficinaId);
@@ -59,8 +60,24 @@ public class CancelPaqueteService implements CancelarPaqueteUseCase {
 
         this.eventPublisherPort.publicarEmail(evento);
 
+        Optional<Oficina> oficinaOrigen = this.oficinaRepositoryPort.findById(paqueteActulizado.getOficinaOrigenId());
+        Optional<Oficina> oficinaDestino = this.oficinaRepositoryPort.findById(paqueteActulizado.getOficinaDestinoId());
 
+        if (oficinaOrigen.isEmpty() || oficinaDestino.isEmpty()) {
+            throw new RecursoNoEncontradoException("No se pudo resolver la oficina de origen/destino del paquete");
+        }
 
+        PaqueteEstadisticaEvento eventoEstadistica = new PaqueteEstadisticaEvento(
+                paqueteActulizado.getId(),
+                paqueteActulizado.getEstadoPaquete().name(),
+                paqueteActulizado.getTarifaAplicada().getMonto(),
+                oficinaId,
+                oficinaOrigen.get().getProvinciaId(),
+                oficinaDestino.get().getProvinciaId(),
+                paqueteActulizado.getFechaCreacion()
+        );
+
+        this.eventPublisherPort.publicarEstadistica(eventoEstadistica);
 
         return paqueteActulizado;
     }
