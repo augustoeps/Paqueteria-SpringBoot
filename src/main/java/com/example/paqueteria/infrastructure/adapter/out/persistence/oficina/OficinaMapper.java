@@ -3,6 +3,8 @@ package com.example.paqueteria.infrastructure.adapter.out.persistence.oficina;
 import com.example.paqueteria.domain.entity.Oficina;
 import com.example.paqueteria.domain.valueobjects.OficinaCodigo;
 import com.example.paqueteria.domain.valueobjects.OficinaDireccion;
+import com.example.paqueteria.domain.valueobjects.OficinaLatitud;
+import com.example.paqueteria.domain.valueobjects.OficinaLongitud;
 import com.example.paqueteria.domain.valueobjects.OficinaNombre;
 import org.springframework.stereotype.Component;
 
@@ -18,6 +20,8 @@ public class OficinaMapper {
                 oficina.getDireccion().getNumero(),
                 oficina.getDireccion().getCiudad(),
                 oficina.getDireccion().getCodigoPostal(),
+                oficina.getLatitud().getValor(),
+                oficina.getLongitud().getValor(),
                 oficina.getProvinciaId()
         );
     }
@@ -33,6 +37,8 @@ public class OficinaMapper {
                         entity.getCalle(),
                         entity.getNumero()
                 ),
+                new OficinaLatitud(entity.getLatitud()),
+                new OficinaLongitud(entity.getLongitud()),
                 entity.getProvinciaId()
         );
     }

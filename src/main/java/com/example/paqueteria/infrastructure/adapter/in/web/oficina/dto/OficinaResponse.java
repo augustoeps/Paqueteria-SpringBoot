@@ -4,7 +4,9 @@ import com.example.paqueteria.domain.entity.Oficina;
 
 import java.util.UUID;
 
-public record OficinaResponse(UUID id, String codigo, String nombre, String calle, String numero, String ciudad, String codigoPostal, UUID provinciaId) {
+public record OficinaResponse(UUID id, String codigo, String nombre, String calle, String numero,
+                              String ciudad, String codigoPostal, Double latitud, Double longitud,
+                              UUID provinciaId) {
 
     public static OficinaResponse desde(Oficina oficina) {
         return new OficinaResponse(
@@ -15,6 +17,8 @@ public record OficinaResponse(UUID id, String codigo, String nombre, String call
                 oficina.getDireccion().getNumero(),
                 oficina.getDireccion().getCiudad(),
                 oficina.getDireccion().getCodigoPostal(),
+                oficina.getLatitud().getValor(),
+                oficina.getLongitud().getValor(),
                 oficina.getProvinciaId()
         );
     }

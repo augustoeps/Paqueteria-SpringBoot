@@ -24,6 +24,12 @@ public record CrearOficinaRequest(
         @NotBlank(message = "El código postal es obligatorio")
         String codigoPostal,
 
+        @NotNull(message = "La latitud es obligatoria")
+        Double latitud,
+
+        @NotNull(message = "La longitud es obligatoria")
+        Double longitud,
+
         @NotNull(message = "La provincia es obligatoria")
         UUID provinciaId
 ) {

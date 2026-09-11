@@ -7,6 +7,8 @@ import com.example.paqueteria.application.port.in.oficina.FindOficinaByIdUseCase
 import com.example.paqueteria.domain.entity.Oficina;
 import com.example.paqueteria.domain.valueobjects.OficinaCodigo;
 import com.example.paqueteria.domain.valueobjects.OficinaDireccion;
+import com.example.paqueteria.domain.valueobjects.OficinaLatitud;
+import com.example.paqueteria.domain.valueobjects.OficinaLongitud;
 import com.example.paqueteria.domain.valueobjects.OficinaNombre;
 import com.example.paqueteria.infrastructure.adapter.in.web.oficina.dto.CrearOficinaRequest;
 import com.example.paqueteria.infrastructure.adapter.in.web.oficina.dto.OficinaResponse;
@@ -49,8 +51,10 @@ public class OficinaController {
                 request.calle(),
                 request.numero()
         );
+        OficinaLatitud latitud = new OficinaLatitud(request.latitud());
+        OficinaLongitud longitud = new OficinaLongitud(request.longitud());
 
-        Oficina oficina = createOficinaUseCase.create(codigo, nombre, direccion, request.provinciaId());
+        Oficina oficina = createOficinaUseCase.create(codigo, nombre, direccion, latitud, longitud, request.provinciaId());
 
         return ResponseEntity.ok(OficinaResponse.desde(oficina));
     }

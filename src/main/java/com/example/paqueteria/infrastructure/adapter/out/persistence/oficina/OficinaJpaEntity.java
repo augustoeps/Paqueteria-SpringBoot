@@ -33,6 +33,12 @@ public class OficinaJpaEntity {
     @Column(name = "codigo_postal", nullable = false)
     private String codigoPostal;
 
+    @Column(name = "latitud", nullable = false)
+    private Double latitud;
+
+    @Column(name = "longitud", nullable = false)
+    private Double longitud;
+
     @Column(name = "provincia_id", nullable = false)
     private UUID provinciaId;
 
@@ -40,7 +46,7 @@ public class OficinaJpaEntity {
     }
 
     public OficinaJpaEntity(UUID id, String codigo, String nombre, String calle, String numero,
-                            String ciudad, String codigoPostal, UUID provinciaId) {
+                            String ciudad, String codigoPostal, Double latitud, Double longitud, UUID provinciaId) {
         this.id = Objects.requireNonNull(id, "El id es obligatorio");
         this.codigo = Objects.requireNonNull(codigo, "El código es obligatorio");
         this.nombre = Objects.requireNonNull(nombre, "El nombre es obligatorio");
@@ -48,6 +54,8 @@ public class OficinaJpaEntity {
         this.numero = Objects.requireNonNull(numero, "El número es obligatorio");
         this.ciudad = Objects.requireNonNull(ciudad, "La ciudad es obligatoria");
         this.codigoPostal = Objects.requireNonNull(codigoPostal, "El código postal es obligatorio");
+        this.latitud = Objects.requireNonNull(latitud, "La latitud es obligatoria");
+        this.longitud = Objects.requireNonNull(longitud, "La longitud es obligatoria");
         this.provinciaId = Objects.requireNonNull(provinciaId, "La provincia es obligatoria");
     }
 
@@ -71,6 +79,12 @@ public class OficinaJpaEntity {
 
     public String getCodigoPostal() { return codigoPostal; }
     public void setCodigoPostal(String codigoPostal) { this.codigoPostal = codigoPostal; }
+
+    public Double getLatitud() { return latitud; }
+    public void setLatitud(Double latitud) { this.latitud = latitud; }
+
+    public Double getLongitud() { return longitud; }
+    public void setLongitud(Double longitud) { this.longitud = longitud; }
 
     public UUID getProvinciaId() { return provinciaId; }
     public void setProvinciaId(UUID provinciaId) { this.provinciaId = provinciaId; }
