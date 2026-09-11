@@ -37,7 +37,7 @@ public class HistorialEstadoController {
         }
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'EMPLEADO')")
+    //@PreAuthorize("hasAnyRole('ADMIN', 'EMPLEADO')")
     @GetMapping("/paquete/{paqueteId}")
     public ResponseEntity<List<HistorialEstadoResponse>> buscarPorPaqueteId(@PathVariable UUID paqueteId) {
         List<HistorialEstado> historial = findHistorialByPaqueteIdUseCase.findByPaqueteId(paqueteId);

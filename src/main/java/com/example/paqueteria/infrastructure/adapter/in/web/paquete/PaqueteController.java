@@ -74,7 +74,7 @@ public class PaqueteController {
         }
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'EMPLEADO')")
+    //@PreAuthorize("hasAnyRole('ADMIN', 'EMPLEADO')")
     @GetMapping("/codigo/{codigoSeguimiento}")
     public ResponseEntity<PaqueteResponse> buscarPorCodigo(@PathVariable String codigoSeguimiento) {
         PaqueteCodigoSeguimiento codigo = new PaqueteCodigoSeguimiento(codigoSeguimiento);
@@ -87,7 +87,7 @@ public class PaqueteController {
         }
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'EMPLEADO')")
+    //@PreAuthorize("hasAnyRole('ADMIN', 'EMPLEADO')")
     @GetMapping
     public ResponseEntity<List<PaqueteResponse>> findAll() {
         List<Paquete> paquetes = findAllPaqueteUseCase.findAll();
