@@ -285,6 +285,7 @@ public class SecurityBeansConfig {
                         .requestMatchers("/paquetes/codigo/**").permitAll()
                         .requestMatchers("/paquetes").permitAll()
                         .requestMatchers("/historial-estados/paquete/**").permitAll()
+                        .requestMatchers("/oficinas").permitAll()
                         .requestMatchers("/error").permitAll()
                         .anyRequest().authenticated()
                 )
