@@ -3,6 +3,7 @@ package com.example.paqueteria.infrastructure.adapter.out.persistence.provincia;
 import com.example.paqueteria.application.exception.RecursoNoEncontradoException;
 import com.example.paqueteria.application.port.out.provincia.ProvinciaRepositoryPort;
 import com.example.paqueteria.domain.entity.Provincia;
+import com.example.paqueteria.domain.entity.Tarifa;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
@@ -69,4 +70,12 @@ public class ProvinciaRepositoryAdapter implements ProvinciaRepositoryPort {
         return true;
 
     }
+
+    @Override
+    public Provincia update(Provincia provincia) {
+        ProvinciaJpaEntity entity = mapper.toJpaEntity(provincia);
+        ProvinciaJpaEntity actualizado = jpaRepository.save(entity);
+        return mapper.toDomain(actualizado);
+    }
+
 }

@@ -1,13 +1,11 @@
 package com.example.paqueteria.infrastructure.adapter.in.web.provincia;
 
-import com.example.paqueteria.application.port.in.provincia.CreateProvinciaUseCase;
-import com.example.paqueteria.application.port.in.provincia.DeleteProvinciaUseCase;
-import com.example.paqueteria.application.port.in.provincia.FindAllProvinciaUseCase;
-import com.example.paqueteria.application.port.in.provincia.FindByIdProvinciaUseCase;
+import com.example.paqueteria.application.port.in.provincia.*;
 import com.example.paqueteria.domain.entity.Provincia;
 import com.example.paqueteria.domain.valueobjects.ProvinciaNombre;
 import com.example.paqueteria.infrastructure.adapter.in.web.provincia.dto.CrearProvinciaRequest;
 import com.example.paqueteria.infrastructure.adapter.in.web.provincia.dto.ProvinciaResponse;
+import com.example.paqueteria.infrastructure.adapter.in.web.provincia.dto.UpdateProvinciaRequest;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -25,15 +23,17 @@ public class ProvinciaController {
     private final FindByIdProvinciaUseCase findByIdProvinciaUseCase;
     private final FindAllProvinciaUseCase findAllProvinciaUseCase;
     private final DeleteProvinciaUseCase deleteProvinciaUseCase;
+    private final UpdateProvinciaUseCase updateProvinciaUseCase;
 
     public ProvinciaController(CreateProvinciaUseCase createProvinciaUseCase,
                                FindByIdProvinciaUseCase findByIdProvinciaUseCase,
                                FindAllProvinciaUseCase findAllProvinciaUseCase,
-                               DeleteProvinciaUseCase deleteProvinciaUseCase) {
+                               DeleteProvinciaUseCase deleteProvinciaUseCase, UpdateProvinciaUseCase updateProvinciaUseCase) {
         this.createProvinciaUseCase = createProvinciaUseCase;
         this.findByIdProvinciaUseCase = findByIdProvinciaUseCase;
         this.findAllProvinciaUseCase = findAllProvinciaUseCase;
         this.deleteProvinciaUseCase = deleteProvinciaUseCase;
+        this.updateProvinciaUseCase = updateProvinciaUseCase;
     }
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
@@ -79,5 +79,12 @@ public class ProvinciaController {
         }
 
         return ResponseEntity.noContent().build();
+    }
+    @PreAuthorize("hasRole('ADMIN')")
+    @PatchMapping("/{id}")
+    public ResponseEntity<ProvinciaResponse> actualizar(@PathVariable UUID id, @Valid @RequestBody UpdateProvinciaRequest request) {
+        ProvinciaNombre nombre = new ProvinciaNombre(request.nombre());
+        Provincia provincia = this.updateProvinciaUseCase.update(id, nombre);
+        return ResponseEntity.ok(ProvinciaResponse.desde(provincia));
     }
 }
