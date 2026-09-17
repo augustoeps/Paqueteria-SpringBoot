@@ -92,7 +92,7 @@ public class TarifaController {
         }
     }
     @PreAuthorize("hasRole('ADMIN')")
-    @PutMapping("/{id}")
+    @PatchMapping("/{id}")
     public ResponseEntity<TarifaResponse> actualizar(@PathVariable UUID id, @Valid @RequestBody UpdateTarifaRequest request) {
         TarifaPrecioPorKilogramo precio = new TarifaPrecioPorKilogramo(request.precioPorKilogramo());
         Tarifa tarifa = updateTarifaUseCase.update(id, precio);
