@@ -24,3 +24,11 @@ jobs:
 
       - name: Compilar y ejecutar tests
         run: mvn -B verify
+
+      - name: Guardar el .jar como artefacto
+        if: github.event_name == 'push'
+        uses: actions/upload-artifact@v4
+        with:
+          name: paqueteria-${{ github.sha }}
+          path: target/*.jar
+          retention-days: 7
