@@ -11,6 +11,10 @@ jobs:
     name: Compilar y ejecutar tests
     runs-on: ubuntu-latest
 
+    permissions:
+      contents: read
+      packages: write
+
     steps:
       - name: Descargar el código
         uses: actions/checkout@v4
@@ -32,3 +36,9 @@ jobs:
           name: paqueteria-${{ github.sha }}
           path: target/*.jar
           retention-days: 7
+
+      - name: Publicar en el repositorio de artefactos
+        if: github.event_name == 'push'
+        run: mvn -B deploy -DskipTests
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
