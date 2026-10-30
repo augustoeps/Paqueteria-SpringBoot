@@ -1,7 +1,5 @@
-package com.example.paqueteria.domain;
+package com.example.paqueteria.domain.entity;
 
-import com.example.paqueteria.domain.entity.HistorialEstado;
-import com.example.paqueteria.domain.entity.Paquete;
 import com.example.paqueteria.domain.enums.EstadoPaquete;
 import com.example.paqueteria.domain.valueobjects.*;
 import org.junit.jupiter.api.Test;

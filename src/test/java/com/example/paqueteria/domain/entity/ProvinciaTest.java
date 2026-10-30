@@ -1,7 +1,6 @@
-package com.example.paqueteria.domain;
+package com.example.paqueteria.domain.entity;
 
 import com.example.paqueteria.domain.valueobjects.ProvinciaNombre;
-import com.example.paqueteria.domain.entity.Provincia;
 
 import org.junit.jupiter.api.Test;
 

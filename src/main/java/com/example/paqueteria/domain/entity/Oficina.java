@@ -23,12 +23,12 @@ public class Oficina {
     public Oficina(OficinaCodigo codigo, OficinaNombre nombre, OficinaDireccion direccion,
                    OficinaLatitud latitud, OficinaLongitud longitud, UUID provinciaId) {
         this.id = UUID.randomUUID();
-        this.codigo = codigo;
-        this.nombre = nombre;
-        this.direccion = direccion;
-        this.latitud = latitud;
-        this.longitud = longitud;
-        this.provinciaId = provinciaId;
+        this.codigo = Objects.requireNonNull(codigo, "El código es obligatorio");
+        this.nombre = Objects.requireNonNull(nombre, "El nombre es obligatorio");
+        this.direccion = Objects.requireNonNull(direccion, "La dirección es obligatoria");
+        this.latitud = Objects.requireNonNull(latitud, "La latitud es obligatoria");
+        this.longitud = Objects.requireNonNull(longitud, "La longitud es obligatoria");
+        this.provinciaId = Objects.requireNonNull(provinciaId, "La provincia es obligatoria");
     }
 
     public Oficina(UUID id, OficinaCodigo codigo, OficinaNombre nombre, OficinaDireccion direccion,

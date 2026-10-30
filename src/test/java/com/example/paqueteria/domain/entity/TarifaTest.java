@@ -1,6 +1,5 @@
-package com.example.paqueteria.domain;
+package com.example.paqueteria.domain.entity;
 
-import com.example.paqueteria.domain.entity.Tarifa;
 import com.example.paqueteria.domain.valueobjects.PaquetePeso;
 import com.example.paqueteria.domain.valueobjects.TarifaPrecioPorKilogramo;
 import org.junit.jupiter.api.Test;
