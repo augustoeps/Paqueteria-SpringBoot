@@ -98,8 +98,7 @@ public class Tarifa {
                     "El peso debe ser mayor que cero"
             );
         }
-        return precioPorKilogramo.getPrecioPorKilogramo().multiply(pesoKilogramos.getKilogramos()).setScale(2, RoundingMode.HALF_UP);
-    }
+        return precioPorKilogramo.getPrecioPorKilogramo().multiply(pesoKilogramos.getKilogramos()).setScale(2, RoundingMode.HALF_UP);    }
 
     @Override
     public boolean equals(Object objeto) {
