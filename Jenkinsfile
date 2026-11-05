@@ -119,4 +119,4 @@ pipeline {
                      *                          en lugar de las de GitHub Packages.
                      *   - -s ci-settings.xml → usa ese archivo de configuración de
                      *                          Maven, que lee el usuario y la
-                     *
+                     */
