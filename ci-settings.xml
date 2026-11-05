@@ -1,0 +1,12 @@
+<settings>
+    <servers>
+        <!-- Credenciales para los repositorios con <id>artifactory</id> del pom.xml -->
+        <server>
+            <id>artifactory</id>
+            <!-- No hay contraseñas aquí: se leen de variables de entorno
+                 que Jenkins rellena desde su credencial 'artifactory-jenkins' -->
+            <username>${env.ARTIFACTORY_USER}</username>
+            <password>${env.ARTIFACTORY_PASSWORD}</password>
+        </server>
+    </servers>
+</settings>
