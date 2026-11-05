@@ -1,6 +1,6 @@
 /*
  * ============================================================================
- *  Jenkinsfile - Pipeline de CI del proyecto Paquetería
+ *  Jenkinsfile - Pipeline de CI/CD del proyecto Paquetería
  * ============================================================================
  *  Este archivo es la "receta" que Jenkins ejecuta en cada rama y en cada
  *  pull request del repositorio. Es el equivalente al .github/workflows/ci.yml
@@ -11,7 +11,8 @@
  *    2. Compila el proyecto y ejecuta todos los tests con Maven.
  *    3. Publica el informe de tests en la web de Jenkins.
  *    4. Si todo ha ido bien, guarda el .jar generado.
- *    5. El plugin de Bitbucket informa del resultado (✅ / ❌) en la pull request.
+ *    5. SOLO en master: publica el .jar en Artifactory (CD).
+ *    6. El plugin de Bitbucket informa del resultado (✅ / ❌) en la pull request.
  * ============================================================================
  */
 
@@ -76,10 +77,60 @@ pipeline {
         }
 
         /*
-         * Aquí añadiremos más adelante otra etapa:
-         *   stage('Publicar en Artifactory'), solo para la rama master.
+         * PUBLICAR EN ARTIFACTORY (CD): solo en la rama master.
+         * En las ramas y pull requests esta etapa se omite: nunca se publica
+         * código que todavía no ha sido revisado y aceptado.
+         * Solo se llega aquí si la etapa anterior (tests) ha ido bien.
          */
-    }
+        stage('Publicar en Artifactory') {
+
+            /*
+             * when: condición para ejecutar la etapa.
+             * branch 'master' → solo cuando el pipeline se ejecuta sobre master,
+             * es decir, después de un merge. Equivale al
+             * "if: github.event_name == 'push'" de GitHub Actions.
+             */
+            when {
+                branch 'master'
+            }
+
+            steps {
+                /*
+                 * withCredentials: saca la credencial 'artifactory-jenkins' del
+                 * almacén de credenciales de Jenkins y la pone en dos variables
+                 * de entorno, SOLO mientras dura este bloque:
+                 *   - ARTIFACTORY_USER     → el usuario 'jenkins' de Artifactory
+                 *   - ARTIFACTORY_PASSWORD → su contraseña
+                 * En el log, la contraseña aparecerá oculta como ****.
+                 * Equivale a los "secrets" de GitHub Actions.
+                 */
+                withCredentials([usernamePassword(
+                        credentialsId: 'artifactory-jenkins',
+                        usernameVariable: 'ARTIFACTORY_USER',
+                        passwordVariable: 'ARTIFACTORY_PASSWORD')]) {
+
+                    /*
+                     * mvn deploy: empaqueta y SUBE el .jar y el pom.xml al
+                     * repositorio de artefactos.
+                     *   - -DskipTests        → no repite los tests: ya pasaron
+                     *                          en la etapa anterior.
+                     *   - -P artifactory     → activa el perfil "artifactory" del
+                     *                          pom.xml, con las URLs de Artifactory
+                     *                          en lugar de las de GitHub Packages.
+                     *   - -s ci-settings.xml → usa ese archivo de configuración de
+                     *                          Maven, que lee el usuario y la
+                     *                          contraseña de las variables de entorno.
+                     * Maven elige el repositorio según la versión del pom.xml:
+                     *   - termina en -SNAPSHOT → libs-snapshot-local
+                     *   - versión definitiva   → libs-release-local
+                     */
+                    sh 'mvn -B deploy -DskipTests -P artifactory -s ci-settings.xml'
+
+                } // fin de withCredentials
+            } // fin de steps
+        } // fin de stage('Publicar en Artifactory')
+
+    } // fin de stages
 
     /*
      * POST: acciones que se ejecutan AL TERMINAR el pipeline,
@@ -109,5 +160,7 @@ pipeline {
         success {
             archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
         }
-    }
-}
+
+    } // fin de post
+
+} // fin de pipeline
