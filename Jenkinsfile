@@ -119,4 +119,48 @@ pipeline {
                      *                          en lugar de las de GitHub Packages.
                      *   - -s ci-settings.xml → usa ese archivo de configuración de
                      *                          Maven, que lee el usuario y la
+                     *                          contraseña de las variables de entorno.
+                     * Maven elige el repositorio según la versión del pom.xml:
+                     *   - termina en -SNAPSHOT → libs-snapshot-local
+                     *   - versión definitiva   → libs-release-local
                      */
+                    sh 'mvn -B deploy -DskipTests -P artifactory -s ci-settings.xml'
+
+                } // fin de withCredentials
+            } // fin de steps
+        } // fin de stage('Publicar en Artifactory')
+
+    } // fin de stages
+
+    /*
+     * POST: acciones que se ejecutan AL TERMINAR el pipeline,
+     * según cómo haya ido.
+     */
+    post {
+
+        /*
+         * always: se ejecuta SIEMPRE, haya ido bien o mal.
+         * junit: lee los informes XML que genera Maven (plugin Surefire) en
+         * target/surefire-reports/ y los muestra en Jenkins: cuántos tests
+         * pasaron, cuáles fallaron, con gráficos de evolución.
+         * allowEmptyResults: true → si la compilación falla antes de llegar a
+         * los tests, no hay informes. Así no se añade un segundo error confuso.
+         */
+        always {
+            junit testResults: 'target/surefire-reports/*.xml', allowEmptyResults: true
+        }
+
+        /*
+         * success: solo si TODO el pipeline ha ido bien.
+         * archiveArtifacts: guarda el .jar generado en Jenkins, para poder
+         * descargarlo desde la ejecución. Equivale a "actions/upload-artifact".
+         * fingerprint: true → Jenkins calcula una "huella" (hash) del archivo,
+         * para saber en qué ejecución se generó cada .jar (trazabilidad).
+         */
+        success {
+            archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
+        }
+
+    } // fin de post
+
+} // fin de pipeline
