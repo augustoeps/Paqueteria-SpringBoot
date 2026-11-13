@@ -11,6 +11,8 @@ import com.example.paqueteria.application.port.out.paquete.PaqueteRepositoryPort
 import com.example.paqueteria.domain.entity.HistorialEstado;
 import com.example.paqueteria.domain.entity.Oficina;
 import com.example.paqueteria.domain.entity.Paquete;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,10 +21,10 @@ import java.util.Optional;
 import java.util.UUID;
 @Service
 public class PonerEnTransitoService implements PonerEnTransitoUseCase {
-
+    private static final Logger log = LoggerFactory.getLogger(PonerEnTransitoService.class);
     private final PaqueteRepositoryPort paqueteRepositoryPort;
     private final OficinaRepositoryPort oficinaRepositoryPort;
-    private  final HistorialEstadoRepositoryPort historialEstadoRepositoryPort;
+    private final HistorialEstadoRepositoryPort historialEstadoRepositoryPort;
     private final EventPublisherPort eventPublisherPort;
 
     public PonerEnTransitoService(PaqueteRepositoryPort paqueteRepositoryPort, OficinaRepositoryPort oficinaRepositoryPort, HistorialEstadoRepositoryPort historialEstadoRepositoryPort, EventPublisherPort eventPublisherPort){
@@ -36,10 +38,15 @@ public class PonerEnTransitoService implements PonerEnTransitoUseCase {
     @Transactional
     public Paquete ponerEnTransito(UUID paqueteId, UUID oficinaId) {
 
+        log.info("Poniendo en tránsito el paquete {} en la oficina {}", paqueteId, oficinaId);
+
+
         Optional<Paquete> paquete = this.paqueteRepositoryPort.findById(paqueteId);
         Optional<Oficina> oficina = this.oficinaRepositoryPort.findById(oficinaId);
 
         if (oficina.isEmpty() || paquete.isEmpty()) {
+            log.warn("Paquete {} u oficina {} no encontrados", paqueteId, oficinaId);
+
             throw new RecursoNoEncontradoException("Paquete u oficina no encontrado");
         }
 
@@ -77,6 +84,8 @@ public class PonerEnTransitoService implements PonerEnTransitoUseCase {
 
         this.eventPublisherPort.publicarEstadistica(eventoEstadistica);
 
+        log.info("Paquete {} puesto en tránsito. Estado actual: {}",
+                paqueteActualizado.getId(), paqueteActualizado.getEstadoPaquete());
         return paqueteActualizado;
     }
 }
